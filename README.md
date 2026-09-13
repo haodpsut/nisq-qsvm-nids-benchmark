@@ -101,7 +101,6 @@ all features: 0.804 on the official split, 0.999 on a random split within the tr
 
 ```
 src/c4_pipeline.py        Core: data, nested subsets, representation, kernels, tuning, statistics
-src/reliability.py        Core of the companion paper (probability calibration)
 
 runners/                  One script per task
   audit_c4.py, audit_figures.py, audit_prose.py, verify_lemma1.py, check_latex.py   audits (see above)
@@ -131,7 +130,7 @@ paper/paper1/             LaTeX sources of the revision
   cover_letter.tex          cover letter
   sections/ tables/ figs_revision/ authors/
   v1_submitted/             the version submitted in May 2026 (PDF, for comparison)
-paper/paper2/             Companion paper on calibration (submitted to IJNM)
+paper/paper2/, src/reliability.py   Material of a separate study by part of the group; not used by this manuscript
 docs/                     Working notes of the authors, in Vietnamese
 ```
 
@@ -182,12 +181,3 @@ Environment used for the reported numbers: NumPy 2.4, SciPy 1.17, scikit-learn 1
 Qiskit 2.3 with qiskit-machine-learning 0.9, Qiskit Aer 0.17. XGBoost with the histogram tree
 method varies by about +-0.001 macro-F1 between machines even single-threaded; no claim in the
 manuscript rests on a smaller difference.
-
----
-
-## Manuscripts
-
-| | Question | Status |
-|---|---|---|
-| Paper 1 (this repository) | In which regime is a NISQ-feasible quantum kernel worth its cost? | Revision 1 under review at IEEE TETC |
-| Paper 2 (`paper/paper2/`) | Are the alarm probabilities of a QSVM calibrated? | Submitted to IJNM, August 2026 |
