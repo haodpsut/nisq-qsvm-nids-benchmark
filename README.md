@@ -1,4 +1,44 @@
-# QSVM-IDS NISQ — Quantum Kernel SVM cho phát hiện xâm nhập mạng
+# NISQ-Aware Quantum Kernel SVM for Network Intrusion Detection
+
+Code, frozen protocol files, per-run results and audit scripts for the manuscript
+*NISQ-Aware Quantum Kernel SVM for Network Intrusion Detection: A Regime-Specific Benchmark on
+NSL-KDD* (IEEE TETC, manuscript TETC-2026-05-0252, revision 1). Release tag `tetc-r1` marks the
+exact state the manuscript reports.
+
+**Reproduce the manuscript's numbers without re-running the experiments.** The per-run results
+of every experiment are committed under `results/`; four audit scripts recompute every published
+statistic, every plotted number and every number written in the prose from those raw records,
+using an independent implementation (`audit_c4.py` re-implements the paired statistics with SciPy
+rather than calling the pipeline's own functions):
+
+```bash
+uv sync                            # dependencies are pinned in pyproject.toml / uv.lock
+python runners/audit_c4.py        # 100/100  paired statistics, regime map (94/100 with SciPy 1.13: three Wilcoxon p-values differ, no verdict changes)
+python runners/audit_figures.py   #  36 items  every plotted number (9 SKIP right after a clone: file mtimes are not stored by git)
+python runners/audit_prose.py     # 123/123  every number written in the text, including Table IV
+python runners/verify_lemma1.py   #  15/15   second-order expansion of the ZZ kernel
+```
+
+**Layout.** `src/c4_pipeline.py` is the whole pipeline (data, nested subsets, representation,
+kernels, tuning); `configs/c4_protocol.json` freezes the protocol (seeds 100-109, grids, both
+sampling regimes); `runners/run_c4.py` re-runs the sample-complexity sweep;
+`runners/run_ref_arm_fullfeat.py` and `runners/make_ref_arm_table.py` produce the full-feature
+reference arm (Table IV); `runners/make_paper1_figures.py` regenerates every figure;
+`paper/paper1/` holds the LaTeX source of the clean manuscript (`main_revision.tex`), the
+annotated copy (`main_annotated.tex`, same source, one flag), the response letter and the cover
+letter. `results/nslkdd/c4_revision/c4_protocol_vs_literature.csv` documents why absolute scores
+on the official NSL-KDD split (XGBoost 0.804 with all features) are far below the 0.99 often
+reported with random splits.
+
+Two sampling regimes are used and must not be mixed: the rare-enriched pool of the submitted
+version (C1 to C3, width sweep; 300-record test split) and the natural class prior (C4, rare
+attacks, reference arm; full KDDTest+). Table II of the manuscript states which figure uses which.
+
+The Vietnamese notes below are the working documentation of the authors and are kept as is.
+
+---
+
+# QSVM-IDS NISQ: Quantum Kernel SVM cho phát hiện xâm nhập mạng
 
 Khung thực nghiệm áp dụng **Quantum Support Vector Machine** với **ZZ-FeatureMap** cho phát
 hiện xâm nhập mạng, dưới ràng buộc phần cứng **NISQ**. Câu hỏi của đề tài không phải *"quantum
@@ -16,10 +56,10 @@ NSL-KDD (41 đặc trưng) → One-Hot (122D) → SelectKBest (K=20) → PCA (n*
 | Muốn biết | Đọc file này |
 |---|---|
 | Bản revision đã làm gì, còn gì phải làm | **[docs/REVISION_REPORT.md](docs/REVISION_REPORT.md)** ← *bắt đầu ở đây* |
-| Reviewer yêu cầu những gì | [docs/Review.md](docs/Review.md) — nguyên văn thư quyết định |
+| Reviewer yêu cầu những gì | [docs/Review.md](docs/Review.md), nguyên văn thư quyết định |
 | Code bổ sung gồm những file nào | [docs/CODE_BO_SUNG.md](docs/CODE_BO_SUNG.md) |
 | Bản mới khác bản đã nộp chỗ nào | [docs/DOI_CHIEU_CU_MOI.md](docs/DOI_CHIEU_CU_MOI.md) |
-| Bản thảo đang viết tới đâu | [paper/paper1/](paper/paper1/) — xem README trong đó |
+| Bản thảo đang viết tới đâu | [paper/paper1/](paper/paper1/), xem README trong đó |
 | Thư trả lời từng ý reviewer | [paper/paper1/response_letter.tex](paper/paper1/response_letter.tex) |
 | Paper 2 (đã nộp IJNM) | [docs/PAPER2_overview.md](docs/PAPER2_overview.md) |
 
@@ -28,7 +68,7 @@ Bản PDF đã compile để trong `paper/paper1/v2_revision/`; bản đã nộp
 
 ---
 
-## Kiểm chứng — chạy được ngay, không cần chạy lại thí nghiệm
+## Kiểm chứng, chạy được ngay, không cần chạy lại thí nghiệm
 
 Đây là phần đáng xem nhất của repo. Bốn bộ kiểm tự động **tính lại từ dữ liệu thô** và đối
 chiếu với mọi con số đã viết trong bài:
@@ -36,13 +76,13 @@ chiếu với mọi con số đã viết trong bài:
 ```bash
 python runners/audit_c4.py        # 100/100  mọi thống kê công bố
 python runners/audit_figures.py   #  36 mục  mọi con số trên hình
-python runners/audit_prose.py     # 122/122  mọi con số viết trong câu văn
+python runners/audit_prose.py     # 123/123  mọi con số viết trong câu văn
 python runners/verify_lemma1.py   #  15/15   khai triển bậc hai của nhân ZZ
 python runners/check_latex.py     #          cấu trúc file .tex
 ```
 
 Nguyên tắc thiết kế đáng lưu ý: **`audit_c4.py` không gọi lại hàm thống kê của
-`src/c4_pipeline.py`** — nó viết lại từ đầu bằng `scipy` rồi so kết quả. Dùng chính code đã
+`src/c4_pipeline.py`**, nó viết lại từ đầu bằng `scipy` rồi so kết quả. Dùng chính code đã
 sinh ra một con số để kiểm con số đó thì lỗi chung sẽ lọt qua cả hai lần.
 
 Bốn bộ kiểm này đã **bắt được 4 lỗi thật trong chính code revision** trước khi công bố, trong
@@ -58,25 +98,25 @@ Bốn bộ kiểm này đã **bắt được 4 lỗi thật trong chính code re
 
 ## Bản revision đã thay đổi những gì
 
-Chạy lại toàn bộ dưới giao thức đã sửa — **10 run thay vì 5, tune đối xứng cho cả mô hình
-lượng tử lẫn cổ điển, thêm Random Forest và XGBoost, báo cáo trên toàn bộ KDDTest⁺** — cho
+Chạy lại toàn bộ dưới giao thức đã sửa, **10 run thay vì 5, tune đối xứng cho cả mô hình
+lượng tử lẫn cổ điển, thêm Random Forest và XGBoost, báo cáo trên toàn bộ KDDTest⁺**, cho
 thấy **năm khẳng định của bản đã nộp không đứng vững**:
 
 | Bản đã nộp | Số đo được |
 |---|---|
-| Lợi thế ở chế độ ít dữ liệu | **Ngược lại** — cổ điển thắng ở N nhỏ |
+| Lợi thế ở chế độ ít dữ liệu | **Ngược lại**, cổ điển thắng ở N nhỏ |
 | "+6.7 điểm rare-attack, d = +0.68" | **Không tái tạo được** |
-| Theorem 1: n\* = 4 cực đại hoá J | **Sai** — J cực đại tại n = 2 |
+| Theorem 1: n\* = 4 cực đại hoá J | **Sai**, J cực đại tại n = 2 |
 | QSVM 0.854 > SVM-RBF 0.838 | **XGBoost 0.8503 > QSVM 0.8469** |
 | "Quantum advantage is real" | **21 thắng / 21 thua / 68 hoà** trên 110 so sánh |
 
 Ba kết quả mới thay vào chỗ đó:
 
-1. **Thứ tự đảo chiều theo lượng dữ liệu** — QSVM gần chót ở N = 100, dẫn đầu ở N = 10⁴, đổi
+1. **Thứ tự đảo chiều theo lượng dữ liệu**, QSVM gần chót ở N = 100, dẫn đầu ở N = 10⁴, đổi
    dấu trong khoảng N = 2000–5000, bền qua **6/6** tổ hợp baseline × cách tune.
-2. **Luật chọn số chiều chuyển giao được** — cùng một luật, không sửa tham số: `n* = 4` trên
+2. **Luật chọn số chiều chuyển giao được**, cùng một luật, không sửa tham số: `n* = 4` trên
    NSL-KDD, `n* = 6` trên UNSW-NB15, lặp lại đúng trên 10/10 tập con.
-3. **Ranh giới đo được kèm cơ chế** — mở rộng mạch lên 8 qubit thì **48/48 so sánh nghiêng về
+3. **Ranh giới đo được kèm cơ chế**, mở rộng mạch lên 8 qubit thì **48/48 so sánh nghiêng về
    cổ điển**; độ trải ma trận Gram giảm nhanh gấp đôi cho nhân ZZ (đúng tỉ lệ cấu trúc mạch dự
    đoán) và **dự đoán được** macro-F1 (r = +0.77).
 
@@ -142,8 +182,8 @@ Mọi con số trong bài đều truy được về `results/`:
 Chỉ hình trong **`paper/paper1/figs_revision/`** là của bản revision.
 
 Hình nằm trong `results/*/c3_multirun/`, `results/*/c4_multirun/`,
-`data/*/processed_data/` đều là **của code cũ** — 5 seed, tune bất đối xứng, chưa có
-RF/XGBoost — và **mâu thuẫn với bài**. Thư mục `reports/` chứa 96 hình loại này đã được **gỡ
+`data/*/processed_data/` đều là **của code cũ**, 5 seed, tune bất đối xứng, chưa có
+RF/XGBoost, và **mâu thuẫn với bài**. Thư mục `reports/` chứa 96 hình loại này đã được **gỡ
 khỏi repo** vì lý do đó; nếu cần tra cứu thì lấy trong lịch sử git.
 
 Xem `paper/paper1/figs_revision/MANIFEST.md` để biết xuất xứ từng hình.
@@ -152,7 +192,7 @@ Xem `paper/paper1/figs_revision/MANIFEST.md` để biết xuất xứ từng hì
 
 
 > **Về dung lượng.** Cache ma trận kernel (`results/*/c3_revision/cache/`,
-> `results/*/c4_revision/cache/`) **không** nằm trong repo — 1,7 GB và sinh lại được. Notebook
+> `results/*/c4_revision/cache/`) **không** nằm trong repo, 1,7 GB và sinh lại được. Notebook
 > tự tính lại khi thiếu; bốn bộ kiểm ở trên chạy bình thường mà không cần chúng.
 
 ## Chạy lại
@@ -165,7 +205,7 @@ python runners/audit_c4.py           # xác nhận kết quả khớp
 ```
 
 Nhân lượng tử được tính bằng **statevector chính xác**, không lấy mẫu. Vì ZZ-FeatureMap chéo
-hoá sau mỗi lớp Hadamard nên trạng thái có dạng đóng, không cần mô phỏng từng cổng — nhanh hơn
+hoá sau mỗi lớp Hadamard nên trạng thái có dạng đóng, không cần mô phỏng từng cổng, nhanh hơn
 Qiskit vài trăm lần và đã đối chiếu khớp tới `1.3e-15`. Nhiễu và sai số lấy mẫu hữu hạn được
 áp **riêng** như hai điều kiện khảo sát, không trộn vào kết quả chính.
 

@@ -77,8 +77,8 @@ TAIL_MAIN = """
 
 ## Nhung cho CON PHAI DIEN truoc khi nop
 
-- `sections/04_setup.tex`: commit hash dang la `19beb18`, phai doi thanh
-  commit cuoi (trong bai co footnote nhac toi no).
+- `sections/04_setup.tex`: bai dan release tag `tetc-r1` cua
+  github.com/haodpsut/nisq-qsvm-nids-benchmark; tag phai tro dung commit cuoi.
 - `document.tex`: ngay thang trong `\\thanks{Manuscript received ...}`.
 - Toan van QMI 2026 (Springer) va Carducci ICAD 2026 (IEEE Xplore): chi con
   can de dien vai o `n/r` trong Table I. Ca hai trich dan da DAY DU.

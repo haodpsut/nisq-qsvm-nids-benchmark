@@ -557,16 +557,21 @@ def section_letter() -> None:
     # phai la mot commit CO THAT trong repo nay.
     import subprocess
     setup = TEXT.get("04_setup.tex", "")
-    m = re.search(r"commit\s*\n?\\texttt\{([0-9a-f]{7,40})\}", setup)
-    check("bai co ghi link repo", "github.com/anhquan1111/QSVM_NSLKDD" in setup,
+    # 13/09/2026: bai dan release TAG thay vi hash (hash cua commit cuoi khong the nam trong chinh no).
+    m = re.search(r"release tag \\texttt\{([\w.-]+)\}", setup)
+    check("bai co ghi link repo (haodpsut/nisq-qsvm-nids-benchmark, tag tetc-r1)", "github.com/haodpsut/nisq-qsvm-nids-benchmark" in setup,
           "thu khang dinh muc IV-D co link -- phai dung")
     if m:
-        rc = subprocess.run(["git", "cat-file", "-e", m.group(1) + "^{commit}"],
+        rc = subprocess.run(["git", "rev-parse", "-q", "--verify", "refs/tags/" + m.group(1)],
                             cwd=ROOT, capture_output=True)
-        check(f"commit hash {m.group(1)} co that trong repo", rc.returncode == 0,
-              "hash go tay khong tro toi commit nao" if rc.returncode else "co")
+        head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+        tagc = subprocess.run(["git", "rev-list", "-n", "1", m.group(1)], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+        check(f"tag {m.group(1)} co that trong repo", rc.returncode == 0,
+              "tag chua tao: git tag tetc-r1 sau commit cuoi" if rc.returncode else "co")
+        check(f"tag {m.group(1)} tro dung HEAD (bai dan dung ban cuoi)", rc.returncode == 0 and tagc == head,
+              f"tag={tagc[:7]} HEAD={head[:7]}")
     else:
-        check("bai co ghi commit hash", False, "khong tim thay")
+        check("bai co ghi release tag", False, "khong tim thay")
 
     # So bo audit ghi trong bai phai khop so bo audit that su co
     for name, n in (("audit\\_c4.py} (100", 100), ("audit\\_figures.py} (36", 36),
