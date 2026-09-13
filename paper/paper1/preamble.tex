@@ -92,13 +92,20 @@
 %    fix      SUA LOI cua ban cu
 %    keep     giu nguyen y cua ban cu
 % =====================================================================
-\newif\ifannot
+% \newif\ifannot -- 13/09: dinh nghia + dat co o main_revision.tex / main_annotated.tex TRUOC \input{preamble}
 % 13/09/2026: TETC doi ban annotated to NEN VANG phan moi/doi. Moi truong revbody boc than
 % moi subsection co nhan new/rewrite/fix; che do sach thi khong lam gi. framed/shaded* qua trang duoc;
 % float khong duoc nam trong no (script check/make_yellow_annotated.py da doi \input float ra ngoai).
-\usepackage{framed}
-\colorlet{shadecolor}{yellow!35}
-\newenvironment{revbody}{\ifannot\csname shaded*\endcsname\fi}{\ifannot\csname endshaded*\endcsname\fi}
+% 13/09 toi: Hao yeu cau to VANG chu (inline highlight), khong dong khung khoi. Ban annotated bien dich
+% bang LUALATEX: lua-ul \highLight to nen tung dong chu, di qua ngat doan, cong thuc, itemize; float da doi ra ngoai.
+% Ban sach van bien dich bang pdflatex (revbody khong lam gi). environ bat than moi truong thanh \BODY.
+\usepackage{environ}
+\ifannot
+  \usepackage{luacolor}\usepackage{lua-ul}
+  \NewEnviron{revbody}{\highLight[yellow!45]{\BODY}}
+\else
+  \newenvironment{revbody}{}{}
+\fi
 \definecolor{tagnew}{HTML}{0B6E4F}
 \definecolor{tagrew}{HTML}{1F3D6B}
 \definecolor{tagfix}{HTML}{A3341F}

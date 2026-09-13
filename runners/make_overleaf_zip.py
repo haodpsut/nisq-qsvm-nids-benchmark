@@ -64,7 +64,7 @@ Overleaf giai nen vao mot thu muc con: file main nam mot noi con
 `preamble.tex` nam noi khac, va bao `File preamble.tex not found`.
 Phai la project MOI.
 
-Compiler: pdfLaTeX. `IEEEtran.cls` co san tren Overleaf, khong can tai kem.
+Compiler: pdfLaTeX cho main_revision; **LuaLaTeX** cho main_annotated (lua-ul). `IEEEtran.cls` co san tren Overleaf.
 Tai lieu tham khao dung `thebibliography`, khong can chay BibTeX.
 
 {blurb}

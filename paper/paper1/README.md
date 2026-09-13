@@ -7,7 +7,7 @@ Hạn nộp lại: **13-10-2026**. TETC **không cho major revision lần hai**.
 ## Ba file compile được
 
 Mỗi file dưới đây ra **một PDF riêng**. Trên Overleaf, đổi **Settings → Main document** sang
-file muốn xuất rồi compile hai lần bằng pdfLaTeX.
+file muốn xuất rồi compile hai lần: `main_revision.tex` bằng pdfLaTeX, `main_annotated.tex` bằng **LuaLaTeX** (tô vàng inline bằng lua-ul).
 
 | File | Ra cái gì | Dùng để làm gì |
 |---|---|---|

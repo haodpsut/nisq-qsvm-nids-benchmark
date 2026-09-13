@@ -13,12 +13,13 @@
 %  Noi dung than bai KHONG khac ban sach mot chu nao -- ca hai deu
 %  \input{document} va \input{preamble}. Sua o sections/ thi ca hai cung doi.
 %
-%  Bien dich: pdflatex -> pdflatex
+%  Bien dich: lualatex -> lualatex  (13/09: to vang inline bang lua-ul, CAN LuaLaTeX; ban sach van pdflatex)
 % =====================================================================
 \documentclass[journal]{IEEEtran}
 
-\input{preamble}
+\newif\ifannot
 \annottrue
+\input{preamble}
 
 \begin{document}
 
