@@ -33,7 +33,7 @@ the revision code before release, one of which had changed the selected `n*` fro
 uv sync                           # dependencies pinned in pyproject.toml / uv.lock (or: pip install -e .)
 python runners/audit_c4.py        # 100/100  paired statistics and the 110-cell regime map
 python runners/audit_figures.py   #  36 items  every plotted number
-python runners/audit_prose.py     # 123/123  every number written in the text, incl. Table IV and the release tag
+python runners/audit_prose.py     # 134/134  every number written in the text, incl. Table IV and the release tag
 python runners/verify_lemma1.py   #  15/15   second-order expansion of the ZZ kernel (Lemma 1)
 python runners/check_latex.py     #          structure of the .tex sources
 ```

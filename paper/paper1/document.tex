@@ -39,7 +39,10 @@ nguyenvan@dut.udn.vn; anh1303052005@gmail.com; votrananhquan1111@gmail.com).}}
 Quantum support vector machines (QSVM) built on the \ZZ{}-feature map are
 routinely reported to help on network intrusion detection (NIDS), yet the
 conditions under which they help are rarely isolated. This paper asks where a
-NISQ-feasible quantum kernel is worth its cost, and answers with a protocol in
+NISQ-feasible quantum kernel is worth its cost, where ``NISQ-aware'' means a
+circuit budget (four qubits, depth two, 44 two-qubit gates) chosen under an
+explicit cost model and checked under a backend-derived noise model in
+simulation, not execution on hardware, and answers with a protocol in
 which one factor is varied at a time: the embedding dimension is fixed by a
 lexicographic rule that charges explicitly for two-qubit gate count; the
 entangling layer is ablated against an otherwise identical control; the test
@@ -47,21 +50,30 @@ distribution is shifted; and the training-set size is swept across two orders of
 magnitude under both the natural class prior and a rare-enriched one. Every
 comparison is paired within run over ten runs, tuned symmetrically for quantum
 and classical models alike, and corrected for multiplicity within baseline
-families. Against six baselines that now include a random forest and XGBoost, we
-find no general advantage: of 110 controlled comparisons, 21 favour the quantum
-kernel, 21 favour a classical baseline, and 68 are inconclusive. What we do find
-is structure. Under the natural class prior the ordering against every strong
-baseline reverses between $N=2000$ and $N=5000$, and the reversal survives
-freezing the hyper-parameters rather than re-tuning them; enriching rare attacks
-twelvefold, as the submitted protocol did, removes it. The selection rule
-transfers to UNSW-NB15 unchanged and returns six qubits rather than four, while
-the sample-complexity reversal does not transfer. Finally, spending a larger
-feature budget forces a wider circuit, and widening destroys the kernel: at
-eight qubits all 48 paired comparisons favour the classical model, with a
-mechanism visible directly in the Gram matrix, whose off-diagonal dispersion
-decays roughly twice as fast for the \ZZ{} map as for its entanglement-free
-control and predicts macro-$F_1$ across widths. We report the result as a regime
-map, including the regimes in which the quantum kernel loses.
+families; under a single Benjamini--Hochberg correction over all cells the
+tally below becomes 17, 15 and 78. Against six baselines that now include a
+random forest and XGBoost, we find no general advantage: of 110 controlled
+comparisons, 21 favour the quantum kernel, 21 favour a classical baseline, and
+68 are inconclusive, and the cells come from two protocols (a rare-enriched
+pool with small test splits, and the natural prior on the full test set) that
+are tallied separately in the paper. What we do find is structure. Under the
+natural class prior the ordering against the two tree ensembles and the linear
+and polynomial kernels reverses between $N=2000$ and $N=5000$ and survives
+freezing the hyper-parameters; against the RBF kernel it does not demonstrably
+reverse at any size tested, and against XGBoost given all 122 features the
+kernel reaches parity, not a lead. Whether rare-attack enrichment, as the
+submitted protocol used, removes the reversal cannot be decided by this design:
+the enriched arm cannot be run past $N=2000$ without runs sharing samples, and
+where the two arms overlap the tree ensembles lead under both priors. The selection rule transfers to
+UNSW-NB15 unchanged and returns six qubits rather than four, while the
+sample-complexity reversal does not transfer. Finally, spending a larger feature
+budget forces a wider circuit, and widening destroys the kernel: at eight qubits
+all 48 paired comparisons favour the classical model, with a mechanism visible
+directly in the Gram matrix, whose off-diagonal dispersion decays faster for the
+\ZZ{} map than for its entanglement-free control, by the factor of two that
+phase-term counting predicts at $K=20$ and by 3.3 at $K=80$, where the collapse
+occurs. We report the result as a regime map, including the regimes in which the
+quantum kernel loses.
 \end{revbody}
 \end{abstract}
 

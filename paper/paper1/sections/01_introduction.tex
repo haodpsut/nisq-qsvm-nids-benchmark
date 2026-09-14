@@ -31,7 +31,8 @@ classical baselines \cite{ref13,ref14,ref15}. What they rarely report is the sha
 set size, against which class prior, at which circuit width, and against which
 classical opponent. Those choices are not incidental. We show below that varying
 only the training-set size, with everything else fixed, is enough to reverse the
-ordering between a quantum kernel and every strong classical baseline we tested.
+ordering between a quantum kernel and the tree ensembles and the linear and
+polynomial kernels we tested, on a shared four-dimensional embedding.
 A benchmark conducted at one operating point can therefore report an advantage
 or a deficit and be internally consistent in either case.
 
@@ -57,13 +58,17 @@ inconclusive. Inside that map there is structure worth reporting:
 
 \begin{itemize}
   \item \textbf{An ordering that reverses with sample size.} Under the natural
-    class prior, \QSVM{} is the second-worst model at $N=100$ and the best at
-    $N=10^{4}$; the paired difference against XGBoost, the random forest and
-    SVM-RBF changes sign between $N=2000$ and $N=5000$ in all six
-    baseline--tuning-arm combinations, and survives freezing the
-    hyper-parameters rather than re-tuning them. Enriching rare attacks
-    twelvefold (the sampling our own submitted protocol used) removes the
-    effect.
+    class prior, on the shared four-component embedding, \QSVM{} is the
+    second-worst model at $N=100$ and the best at $N=10^{4}$; the paired
+    difference against XGBoost and the random forest changes sign between
+    $N=2000$ and $N=5000$ in both tuning arms and reaches corrected
+    significance, the sign change against SVM-RBF is $+0.0008$ and never
+    significant, and against XGBoost given all $122$ features the kernel
+    reaches parity rather than a lead. Whether rare-attack enrichment (the
+    sampling our own submitted protocol used) removes the reversal is not
+    decidable with this design: the enriched arm ends at $N=2000$, before the
+    reversal, and where the two arms overlap the tree ensembles lead under
+    both priors.
   \item \textbf{A selection rule that transfers.} The three-stage rule returns
     $n^{\ast}=4$ on NSL-KDD and, applied without changing a threshold,
     $n^{\ast}=6$ on UNSW-NB15, recovered on $10/10$ independent subsets. The
@@ -72,10 +77,14 @@ inconclusive. Inside that map there is structure worth reporting:
     wider circuit, and widening destroys the kernel: at $K=80$, where the rule
     returns $n^{\ast}=8$, all $48$ paired comparisons favour the classical
     model and the entanglement ablation reverses sign. The mechanism is visible
-    in the Gram matrix, whose off-diagonal dispersion decays about twice as fast
-    for the \ZZ{} map as for its entanglement-free control, the ratio the
-    $\binom{n}{2}$ versus $n$ phase-term counting predicts, and correlates
-    with macro-$F_{1}$ at $r=+0.77$.
+    in the Gram matrix, whose off-diagonal dispersion decays faster for the
+    \ZZ{} map than for its entanglement-free control: by a factor of $2.02$ at
+    $K=20$, the ratio the $\binom{n}{2}$ versus $n$ phase-term counting
+    predicts, and by $3.32$ at $K=80$, where the collapse occurs and the
+    counting argument predicts the ordering but not the rate. Across widths the
+    dispersion correlates with macro-$F_{1}$ at $r=+0.77$ for the \ZZ{} map
+    (seven widths, 95\% CI $[+0.04,+0.96]$); the contrast with the \Zmap{}
+    map ($r=+0.32$) is not resolvable at seven points.
 \end{itemize}
 
 We also report where the method loses. It degrades faster than either tree

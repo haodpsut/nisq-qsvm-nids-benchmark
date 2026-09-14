@@ -84,6 +84,7 @@ variation across sizes reflects added data rather than a changed sample.
 \end{revbody}
 
 \subsection{Statistical methodology}
+\label{sec:stats}
 \revnote{rewrite}{Holm correction within baseline families added (R2-3, R2-4).}
 \begin{revbody}
 
@@ -99,9 +100,16 @@ Because each contribution tests several baselines, $p$-values are Holm-corrected
 within baseline families, namely \emph{entanglement} $\{$QSVM-\Zmap{}$\}$,
 \emph{classical kernel} $\{$linear, poly2, RBF$\}$, and \emph{strong tabular}
 $\{$random forest, XGBoost$\}$, and every verdict in this paper is the
-corrected one. A comparison is called favourable to one side only when the
-corrected $p<0.05$ \emph{and} the confidence interval excludes zero; otherwise
-it is inconclusive, and we report it as such rather than as a win.
+corrected one. Two consequences of that choice are stated so that the tally is
+read correctly. The entanglement family has one member, so for the $20$ cells
+of the regime map that compare \QSVM{} with QSVM-\Zmap{} the corrected $p$ is
+the raw $p$; and the map's $110$ cells fall into about $56$ families, so under
+a global null the expected number of false verdicts across the map is about
+$2.8$. Sec.~\ref{sec:regimemap} therefore also reports the tally under a single
+Benjamini--Hochberg correction over all $110$ cells. A comparison is called
+favourable to one side only when the corrected $p<0.05$ \emph{and} the
+confidence interval excludes zero; otherwise it is inconclusive, and we report
+it as such rather than as a win.
 \end{revbody}
 
 \subsection{Implementation and reproducibility}
@@ -137,7 +145,7 @@ rather than calling the pipeline's own statistics functions, since using the
 code that produced a number to verify that number lets shared errors through.
 \texttt{audit\_figures.py} (36) checks that each figure is newer than its inputs
 and that every plotted number is re-derived from the artifacts.
-\texttt{audit\_prose.py} (123) re-derives every number written in the text of
+\texttt{audit\_prose.py} (134) re-derives every number written in the text of
 this paper. \texttt{verify\_lemma1.py} (15) checks the expansion of
 Lemma~\ref{lem:expansion} against the exact kernel. Together they found four
 errors in our own revision code before publication, one of which changed a

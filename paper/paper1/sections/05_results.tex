@@ -168,15 +168,26 @@ kernel at any size we tested. Significance is reached against XGBoost at
 $N\geq5000$, against the random forest only at $N=10^4$, and against the linear
 and poly-2 kernels from $N=1000$ and $N=2000$ respectively.
 
-Third, the reversal is a property of the natural prior, not of the data volume
-alone. Repeating the sweep with rare attacks enriched twelvefold to $10\%$,
-the sampling the submitted protocol used, leaves $26$ of $30$ comparisons
-inconclusive, with no crossover anywhere in range. That regime cannot be pushed
-past $N=2000$: at $N=5000$ the ten runs would share $59\%$ of their rare
-samples, and independence between runs would be lost. Within the range where the
-two regimes overlap, changing only the class prior removes the effect. This is a
-direct consequence for the submitted protocol, whose enrichment concealed the
-very regime in which the kernel does best.
+Third, whether the reversal is a property of the natural prior cannot be
+decided by this design, and an earlier draft of this paper claimed that it was.
+Repeating the sweep with rare attacks enriched twelvefold to $10\%$, the
+sampling the submitted protocol used, leaves $26$ of $30$ comparisons
+inconclusive and shows no crossover in its range; but that range ends at
+$N=2000$, because at $N=5000$ the ten runs would share $59\%$ of their rare
+samples and independence between runs would be lost, and the crossover under
+the natural prior occurs between $N=2000$ and $N=5000$, one step beyond it.
+Within the range the two regimes share, the tree ensembles lead under both
+priors: against XGBoost the paired difference is negative at all five sizes
+under both, against the random forest and SVM-RBF at five of five under the
+natural prior and four of five under enrichment, and the sign agrees in $22$ of
+the $30$ shared cells; the enriched arm reaches a verdict in $4$ of its $30$
+cells against $12$ of $30$ for the natural arm on the same sizes, most of the
+difference being classical-favourable cells at $N\leq1000$ that enrichment
+leaves inconclusive. The enriched arm therefore ends before the phenomenon begins, and
+what the comparison establishes is that enrichment is untested against the
+crossover, not that it removes it. What does follow for the submitted protocol
+is narrower: a sweep confined to $N\leq2000$, under either prior, could not have
+seen the regime in which the kernel does best.
 
 Fourth, the reversal is a statement about the shared embedding, not about the
 dataset. Table~\ref{tab:ref-arm} adds a reference arm outside the paired
@@ -263,13 +274,23 @@ against $\alpha_{\Zmap}=0.292$ at $K=20$, a ratio of $2.02$. That ratio is
 what the circuit structure predicts: the \ZZ{} map contributes
 $\binom{n}{2}$ pairwise phase terms where the \Zmap{} map contributes $n$
 single-qubit terms, so the former's phase content grows quadratically and the
-latter's linearly. Over the same range at $K=80$ the \ZZ{} kernel loses $49\%$
-of its off-diagonal dispersion against $18\%$ for the \Zmap{} kernel.
+latter's linearly. The prediction holds at $K=20$ and not at $K=80$, the budget
+at which the collapse occurs: there the fitted exponents are $0.75$ against
+$0.23$, a ratio of $3.32$ (Fig.~\ref{fig:width}b), and over the same range the
+\ZZ{} kernel loses $49\%$ of its off-diagonal dispersion against $18\%$ for the
+\Zmap{} kernel. The counting argument therefore predicts the ordering of the
+two decay rates everywhere and their ratio only where the kernel does not
+collapse; Sec.~\ref{sec:limitations} returns to this.
 
 The concentration is not merely present; it tracks the end-task result. Across
 $n=4,\dots,10$ the correlation between off-diagonal dispersion and macro-$F_1$
-is $r=+0.77$ for the \ZZ{} kernel and $r=+0.32$ for the \Zmap{} kernel, which
-barely concentrates. As the Gram matrix flattens, accuracy follows it down.
+is $r=+0.77$ for the \ZZ{} kernel (95\% CI $[+0.04,+0.96]$, $p=0.04$ on seven
+widths) and $r=+0.32$ for the \Zmap{} kernel ($[-0.57,+0.87]$, $p=0.48$), which
+barely concentrates. The first correlation is resolved, barely; the contrast
+between the two is not: a test of the difference between the two correlations
+gives $z=0.97$, $p=0.33$, so the data do not establish that the relation is
+specific to the concentrating map, and we do not claim that they do. As the Gram
+matrix flattens, accuracy follows it down.
 This is the exponential-concentration phenomenon of \cite{thanasilp2024} in a
 concrete applied setting, and it is why we present a bounded operating window
 rather than a method that scales.

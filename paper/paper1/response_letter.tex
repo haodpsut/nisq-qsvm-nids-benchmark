@@ -170,7 +170,7 @@ Script & Result & What it checks \\
 \texttt{audit\_figures.py} & 36/36 &
   Every figure is newer than its inputs, and every plotted number is re-derived
   from the artifacts \\
-\texttt{audit\_prose.py} & 123/123 &
+\texttt{audit\_prose.py} & 134/134 &
   Every number written in the manuscript text \emph{and in this letter} is
   re-derived from the artifacts \\
 \texttt{verify\_lemma1.py} & 15/15 &
@@ -200,7 +200,12 @@ We accept this without reservation. The claim of a general advantage has been
 withdrawn. The paper is reframed from ``where is there an advantage'' to
 ``where is a quantum kernel worth its cost'', and the answer is reported as a
 regime map in which negative and inconclusive verdicts appear on the same
-footing as positive ones: $21$ / $21$ / $68$ over $110$ comparisons.
+footing as positive ones: $21$ / $21$ / $68$ over $110$ comparisons within
+baseline families, $17$ / $15$ / $78$ under a single Benjamini--Hochberg
+correction over all $110$ cells, and tallied separately for the natural-prior
+cells on the full test set ($11$ / $9$ / $22$) and the rare-enriched cells
+($10$ / $12$ / $46$), since Table~II shows the two protocols are not
+interchangeable.
 \changed
 New Sec.~VI (Regime Map), Fig.~9, and a rewritten abstract and introduction.
 The introduction states the withdrawn claims on its first page.
@@ -411,16 +416,25 @@ freezing the hyper-parameters: all six baseline--arm combinations change sign in
 the same interval, so it is not a re-tuning artefact. Second, it is not uniform
 across baselines: against SVM-RBF the difference turns positive but no cell
 reaches corrected significance, so the quantum kernel never demonstrably beats
-an RBF kernel at any size we tested. Third, it is a property of the natural
-prior: repeating the sweep with rare attacks enriched twelvefold to $10\%$,
-the sampling our own submitted protocol used, leaves $26$ of $30$ comparisons
-inconclusive with no crossover in range.
+an RBF kernel at any size we tested. Third, whether the reversal is a property
+of the natural prior is not decidable with this design, and we say so: the
+enriched arm (rare attacks at $10\%$, the sampling our own submitted protocol
+used) cannot be run past $N=2000$ without runs sharing samples, and the
+crossover occurs between $N=2000$ and $N=5000$, so the enriched arm ends
+before the phenomenon begins; within the range the two arms share, the tree
+ensembles lead under both priors and the sign agrees in $22$ of $30$ cells.
+An earlier draft of this reply, and of the manuscript, stated that enrichment
+``removes'' the crossover; that overstated what the data show, and both now
+say that enrichment is untested against it. Fourth, the reversal is a statement
+about the shared four-component embedding: against XGBoost given all $122$
+features the kernel reaches parity at $N\geq5000$, not a lead (Table~IV).
 
-That third point is the reason the submitted version reported the opposite
-conclusion, and we regard identifying it as the most useful thing this revision
-does.
+What does follow for the submitted version is that a sweep confined to
+$N\leq1000$, under either prior, could not have seen the regime in which the
+kernel does best; that, rather than the prior, is why it reported the opposite
+conclusion.
 \changed
-Sec.~V-D, Fig.~6, Table~III.
+Sec.~V-D, Fig.~6, Tables~III and~IV.
 
 \itemhead{R1-8}{Table~VI ($N=1000$) inconsistent with Table~IV}
 \resp
@@ -510,8 +524,15 @@ it is also the mechanism behind the paper's sharpest new boundary. Fitting
 $s(n)\propto n^{-\alpha}$ to the off-diagonal dispersion over $n=4,\dots,10$
 gives $\alpha_{\mathrm{ZZ}}=0.590$ against $\alpha_{\mathrm{Z}}=0.292$ at $K=20$,
 a ratio of $2.02$, matching the $\binom{n}{2}$ versus $n$ growth in the number
-of phase terms. Across the same widths the dispersion correlates with
-macro-$F_1$ at $r=+0.77$ for the ZZ kernel and $r=+0.32$ for the Z kernel.
+of phase terms; at $K=80$, where the collapse occurs, the ratio is $3.32$, so
+the counting argument predicts the ordering of the two rates everywhere and
+their ratio only where the kernel does not collapse, and the manuscript now
+says so at every place the ratio is quoted. Across the same widths the
+dispersion correlates with macro-$F_1$ at $r=+0.77$ for the ZZ kernel (95\% CI
+$[+0.04,+0.96]$ on seven widths) and $r=+0.32$ for the Z kernel
+($[-0.57,+0.87]$); the contrast between the two is not resolvable at seven
+points ($z=0.97$, $p=0.33$), and the manuscript no longer presents it as
+evidence that the relation is specific to the concentrating map.
 \changed
 Sec.~III (F3), Sec.~V-G, Fig.~8, Sec.~VII-B.
 
@@ -632,9 +653,11 @@ think, a result about the technology rather than a shortfall of either paper.
 honestly come to the reviewer's ``theoretical result establishing a regime'',
 and we present it as an empirical regularity rather than a theorem. The
 off-diagonal dispersion of the Gram matrix decays as $n^{-\alpha}$ with
-$\alpha_{\mathrm{ZZ}}/\alpha_{\mathrm{Z}}=2.02$, the ratio predicted by
-counting $\binom{n}{2}$ pairwise phase terms against $n$ single-qubit ones,
-and it predicts end-task macro-$F_1$ across widths at $r=+0.77$. It tells us
+$\alpha_{\mathrm{ZZ}}/\alpha_{\mathrm{Z}}=2.02$ at $K=20$, the ratio predicted
+by counting $\binom{n}{2}$ pairwise phase terms against $n$ single-qubit ones,
+and $3.32$ at $K=80$, where the counting argument predicts the ordering but not
+the rate; the dispersion tracks end-task macro-$F_1$ across widths at $r=+0.77$
+(95\% CI $[+0.04,+0.96]$). It tells us
 where the method stops working, and that boundary is the part of this paper most
 likely to hold beyond these two datasets.
 \changed

@@ -105,12 +105,23 @@ ablation, against five tuned classical baselines including a random forest and
 XGBoost, with Benjamini--Hochberg control over $108$ comparisons on NSL-KDD.
 Their conclusion, that reported quantum gains are largely attributable to the
 classical preprocessing front-end once the same front-end is given to classical
-models, corroborates, from a different direction, the decomposition we report
-in Sec.~\ref{sec:res-c4}. We do not claim breadth over that study: they evaluate
-four datasets to our two, at eight qubits to our four and six, with a stricter
-error-rate criterion. What they hold fixed is the training-set size, the full
-$125{,}973$-record training partition on NSL-KDD, and that is where our
-contribution lies.
+models, stands in a relation to Sec.~\ref{sec:res-c4} that is closer to a
+discrepancy than to corroboration, and we report it as such. Our positive
+result is obtained under exactly the matched front-end they describe: every
+classical baseline consumes the same four components as the circuit, and the
+kernel still leads the tree ensembles at $N\geq5000$. Two differences may
+account for it, and the data cannot separate them. Their comparison is made at
+one training-set size, the full $125{,}973$-record partition, where our
+reference arm shows full-feature XGBoost at $0.804$ above any four-qubit model;
+ours sweeps $N$ and finds the lead only between $5000$ and $10^{4}$ records, on
+an embedding of four dimensions. And their front-end is given to classical
+models at eight qubits' worth of features, where Sec.~\ref{sec:res-width}
+shows our kernel has already collapsed. Read together, the two studies agree
+that the front-end carries most of what is reported as quantum advantage, and
+disagree on whether a residual lead exists in a narrow window of training-set
+size and embedding width that their design does not visit. We do not claim
+breadth over that study: they evaluate four datasets to our two, at eight
+qubits to our four and six, with a stricter error-rate criterion.
 \end{revbody}
 
 \subsection{Bounded advantage windows in adjacent domains}

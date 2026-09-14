@@ -14,17 +14,22 @@ kernel, $21$ favouring a classical baseline, and $68$ inconclusive, and a
 structure inside that balance that a single-operating-point benchmark cannot
 see.
 
-The structure has three parts. The ordering between \QSVM{} and every strong
-classical baseline reverses between $N=2000$ and $N=5000$ under the natural class
-prior, in both tuning arms, and disappears when rare attacks are enriched. A
+The structure has three parts. The ordering between \QSVM{} and the tree
+ensembles and the linear and polynomial kernels reverses between $N=2000$ and
+$N=5000$ under the natural class prior, in both tuning arms, on a shared
+four-component embedding; it does not demonstrably reverse against SVM-RBF at
+any size tested, it becomes parity rather than a lead against XGBoost on the raw
+$122$ features, and whether rare-attack enrichment removes it is not decided by
+this design, whose enriched arm ends before the reversal begins. A
 lexicographic selection rule that charges for two-qubit gates returns
 $n^{\ast}=4$ on NSL-KDD and $n^{\ast}=6$ on UNSW-NB15 without any change of
 threshold, so the embedding dimension is a property of the dataset rather than a
 constant to be inherited. And the operating window is closed from above: at
 $K=80$, where the rule requires eight qubits, every one of $48$ comparisons
-favours the classical model, with off-diagonal Gram dispersion decaying about
-twice as fast for the \ZZ{} map as for its entanglement-free control and
-tracking macro-$F_1$ at $r=+0.77$.
+favours the classical model, with off-diagonal Gram dispersion decaying faster
+for the \ZZ{} map than for its entanglement-free control, by the factor of two
+that phase-term counting predicts at $K=20$ and by $3.3$ at $K=80$, and tracking
+macro-$F_1$ at $r=+0.77$ over seven widths (95\% CI $[+0.04,+0.96]$).
 
 That last result is the one we would most like others to test. It ties a
 structural property of the circuit ($\binom{n}{2}$ pairwise phase terms

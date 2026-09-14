@@ -219,6 +219,44 @@ def section_ref_arm() -> None:
           says("05_results.tex", "parity, not a crossover"), "N=5000/10^4 CI chua 0")
 
 
+def section_round2() -> None:
+    """14/09/2026, doc ngoai vong 1 (Major): ba cau tom tat vuot ket qua. Kiem cac so MOI them vao bai:
+    BH toan cuc tren 110 o, tach tally theo giao thuc, ti so mu 3.32 o K=80, CI cua r, arm enriched vs natural."""
+    print("\nD''. Sua theo doc ngoai 14/09 -- BH toan cuc, tach giao thuc, ti so mu, CI cua r")
+    from scipy import stats
+    rm = pd.read_csv(NSL / "regime_map_rows.csv")
+    p = rm.p_value.values; n = len(p); order = np.argsort(p); bh = np.empty(n); prev = 1.0
+    for r in range(n - 1, -1, -1):
+        i = order[r]; prev = min(prev, p[i] * n / (r + 1)); bh[i] = prev
+    v = np.where(bh < 0.05, np.where(rm.ci_low > 0, "QSVM-favorable", np.where(rm.ci_high < 0, "classical-favorable", "inconclusive")), "inconclusive")
+    vc = pd.Series(v).value_counts()
+    tally = "%d, %d and %d" % (vc.get("QSVM-favorable", 0), vc.get("classical-favorable", 0), vc.get("inconclusive", 0))
+    check("BH toan cuc 110 o = 17/15/78 va bai ghi dung", tally == "17, 15 and 78" and says("06_regimemap.tex", "$17$, $15$ and $78$") and says("main_revision.tex", "17, 15 and 78"), tally)
+    check("BH: khong o nao doi phe (chi ve inconclusive)", all((a == b) or (b == "inconclusive") for a, b in zip(rm.verdict, v)), "")
+    nat = rm[rm.regime == "sample_complexity_natural"].verdict.value_counts(); enr = rm[rm.regime != "sample_complexity_natural"].verdict.value_counts()
+    check("tach tally: natural 11/9/22, enriched 10/12/46", (nat.get("QSVM-favorable"), nat.get("classical-favorable"), nat.get("inconclusive")) == (11, 9, 22)
+          and (enr.get("QSVM-favorable"), enr.get("classical-favorable"), enr.get("inconclusive")) == (10, 12, 46)
+          and says("06_regimemap.tex", "(11 favourable, 9 unfavourable, 22 inconclusive)") and says("06_regimemap.tex", "(10, 12, 46)"), f"{dict(nat)} {dict(enr)}")
+    check("20 o ho entanglement (m=1)", (rm.baseline == "QSVM_Z").sum() == 20 and says("04_setup.tex", "for the $20$ cells"), str((rm.baseline == "QSVM_Z").sum()))
+    w = pd.read_csv(NSL / "c1_revision/c1_width_sweep.csv"); out = {}
+    for k in ("ZZ", "Z"):
+        g = w[w.kernel == k].groupby("n").mean(numeric_only=True); r = np.corrcoef(g.offdiag_std, g.f1_macro)[0, 1]; m = len(g)
+        z = np.arctanh(r); se = 1 / np.sqrt(m - 3); out[k] = (r, np.tanh(z - 1.96 * se), np.tanh(z + 1.96 * se), m)
+    check("r_ZZ = +0.77, CI [+0.04,+0.96] (7 diem)", abs(out["ZZ"][0] - 0.77) < 0.005 and abs(out["ZZ"][1] - 0.04) < 0.005 and abs(out["ZZ"][2] - 0.96) < 0.005 and out["ZZ"][3] == 7
+          and says("05_results.tex", "$[+0.04,+0.96]$"), "r=%.3f [%.3f, %.3f] n=%d" % out["ZZ"])
+    check("r_Z = +0.32, CI [-0.57,+0.87]", abs(out["Z"][0] - 0.32) < 0.005 and abs(out["Z"][1] + 0.57) < 0.005 and abs(out["Z"][2] - 0.87) < 0.005 and says("05_results.tex", "$[-0.57,+0.87]$"), "r=%.3f [%.3f, %.3f]" % out["Z"][:3])
+    zd = (np.arctanh(out["ZZ"][0]) - np.arctanh(out["Z"][0])) / np.sqrt(1 / 4 + 1 / 4); pz = 2 * (1 - stats.norm.cdf(abs(zd)))
+    check("khac biet hai r: z=0.97, p=0.33", abs(zd - 0.97) < 0.01 and abs(pz - 0.33) < 0.01 and says("05_results.tex", "$z=0.97$, $p=0.33$"), "z=%.2f p=%.2f" % (zd, pz))
+    s = nsl_c4(); s = s[s.n_train <= 2000]; m2 = pd.read_csv(NSL / "c4_revision/c4_pairwise_statistics_matched.csv")
+    m2["test_split"] = m2.test_split.replace({"full_kddtest_plus": "full_test"}); m2 = m2[(m2.arm == "tuned_per_N") & (m2.test_split == "full_test")]
+    a = s.set_index(["n_train", "baseline"]).mean_delta; b = m2.set_index(["n_train", "baseline"]).mean_delta; agree = int(((a > 0) == (b.reindex(a.index) > 0)).sum())
+    check("dau khop 22/30 o chung natural vs enriched", agree == 22 and says("05_results.tex", "sign agrees in $22$ of\nthe $30$ shared cells"), str(agree))
+    check("ket luan: natural 12/30, enriched 4/30", (s.verdict != "inconclusive").sum() == 12 and (m2.verdict != "inconclusive").sum() == 4
+          and says("05_results.tex", "$4$ of its $30$") and says("05_results.tex", "$12$ of $30$"), "%d, %d" % ((s.verdict != "inconclusive").sum(), (m2.verdict != "inconclusive").sum()))
+    check("bai KHONG con noi enrichment 'removes' crossover", not says("main_revision.tex", "removes it") and not says("08_conclusion.tex", "disappears when rare attacks") and not says("01_introduction.tex", "removes the\n    effect"), "")
+    check("bai KHONG con noi 'every strong' baseline", not any(says(f, "every strong") for f in ("main_revision.tex", "01_introduction.tex", "08_conclusion.tex")), "")
+
+
 def section_c4() -> None:
     print("\nD. Muc V-D -- do phuc tap mau va cho doi dau")
     d = nsl_runs()
@@ -612,7 +650,7 @@ def main() -> int:
     if missing:
         print(f"  Thieu file: {missing}")
         return 1
-    for fn in (section_c1, section_c2, section_c3, section_c4, section_ref_arm, section_rare,
+    for fn in (section_c1, section_c2, section_c3, section_c4, section_ref_arm, section_round2, section_rare,
                section_unsw, section_width, section_map, section_lemma, section_letter):
         fn()
     # Thu phan hoi trich dan chinh so kiem dinh cua script nay. Reviewer se
