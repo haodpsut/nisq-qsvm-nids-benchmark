@@ -58,7 +58,9 @@ classical score available on the record.
 
 \emph{Balanced binary composition.} On a $50/50$ Normal--DoS mixture the quantum
 kernel is favourable against all four kernel baselines, with effect sizes up to
-$3.02$. This is the condition under which quantum-kernel IDS results are most
+$3.02$. This is a C3 cell: models trained on the rare-enriched $N=1000$ pool
+and scored on a re-mixed $1000$-record test set, so it lies outside the
+natural-prior block and is not visible in the single-protocol reading. This is the condition under which quantum-kernel IDS results are most
 often reported in the literature, and our numbers reproduce that impression;
 which is part of why we report the other conditions too.
 
@@ -80,7 +82,10 @@ tested recovers this.
 \emph{Feature perturbation.} Six of six comparisons are classical-favourable
 with effect sizes beyond $2.8$. The quantum kernel is the most perturbation-%
 sensitive model in the study, which matters for a security application where
-adversarial feature manipulation is the norm rather than the exception.
+adversarial feature manipulation is the norm rather than the exception. Like
+the balanced-composition result above, this is a C3 cell on the rare-enriched
+pool and a $1000$-record test set, outside the natural-prior block; the two
+clearest effect sizes in the map both come from that protocol.
 
 \emph{Strong prior shift.} At a $70\%$ attack rate the comparison against
 XGBoost is classical-favourable, and \QSVM{} degrades across the shift by
@@ -116,8 +121,9 @@ less.
 
 Second, the favourable regime is bounded on every axis we varied, and the
 bounds are not far apart: $N \gtrsim 5000$ but not at a width beyond four to six
-qubits, under the natural prior but not under enrichment, on NSL-KDD but not on
-UNSW-NB15 for the sample-size effect. A method whose advantage is confined to a
+qubits, on NSL-KDD but not on UNSW-NB15 for the sample-size effect, and under
+the natural prior, with the enriched prior untested at the sizes where the
+regime lies. A method whose advantage is confined to a
 box this small is not yet a practical instrument, and we do not present it as
 one. What it is, on this evidence, is a phenomenon with a measurable boundary
 and the boundary, being predicted by the circuit's phase-term count, is the

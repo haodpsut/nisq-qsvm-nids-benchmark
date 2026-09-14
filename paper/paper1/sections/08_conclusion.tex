@@ -10,9 +10,12 @@
 We set out to locate, rather than to demonstrate, the value of a NISQ-feasible
 quantum kernel for network intrusion detection. Varying one factor at a time
 over $110$ controlled comparisons, we find $21$ verdicts favouring the quantum
-kernel, $21$ favouring a classical baseline, and $68$ inconclusive, and a
-structure inside that balance that a single-operating-point benchmark cannot
-see.
+kernel, $21$ favouring a classical baseline, and $68$ inconclusive when each
+is corrected within its baseline family; $17$, $15$ and $78$ under one
+Benjamini--Hochberg correction over the map; and no surviving verdict at all
+under Holm over all $110$ cells. Inside that balance there is a structure that
+a single-operating-point benchmark cannot see, and it is stated below with the
+protocol each part of it comes from.
 
 The structure has three parts. The ordering between \QSVM{} and the tree
 ensembles and the linear and polynomial kernels reverses between $N=2000$ and

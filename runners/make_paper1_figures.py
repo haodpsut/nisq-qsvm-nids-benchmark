@@ -449,7 +449,8 @@ def figure9():
                         ha="center", va="bottom", fontsize=7.5, color=INK_2)
 
     _curve_legend(fig, y=-0.02, ncol=8)
-    fig.suptitle("Enriching rare attacks removes the crossover: NSL-KDD",
+    # 14/09 doc ngoai vong 2: tieu de cu khang dinh dieu bai da rut. Arm enriched dung o N=2000, TRUOC crossover.
+    fig.suptitle("The enriched arm ends before the crossover: NSL-KDD",
                  x=0.012, ha="left", fontsize=10, fontweight="bold", color=INK)
     fig.tight_layout(rect=(0, 0.035, 1, 0.95))
     return save(fig, "fig9_learning_curve_nslkdd")
